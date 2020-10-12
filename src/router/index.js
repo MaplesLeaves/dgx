@@ -38,7 +38,18 @@ const routes = [{
         title: '角色管理'
       }
     },
-    
+    {
+      path: '/rule',
+      name: 'Rule',
+      component: () => import('../views/rule/index.vue'),
+      children: [
+      {
+        path: '/',
+        name: 'Basics',
+        component: () => import('../views/rule/basics'),
+      },
+      ]
+    }
   ]
 }]
 
