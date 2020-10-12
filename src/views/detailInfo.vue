@@ -492,11 +492,11 @@ export default {
 };
 </script>
 
-<style lang='less'>
-.el-message {
+<style lang='less' scoped>
+/deep/ .el-message {
   z-index: 10000 !important;
 }
-.el-date-editor .el-range-separator {
+/deep/ .el-date-editor .el-range-separator {
   width: 22px;
 }
 .detailInfo {

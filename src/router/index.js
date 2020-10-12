@@ -4,7 +4,7 @@
  * @Author: MapleLeaves
  * @Date: 2020-09-28 17:19:53
  * @LastEditors:  
- * @LastEditTime: 2020-10-10 14:37:02
+ * @LastEditTime: 2020-10-12 11:14:29
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -49,7 +49,39 @@ const routes = [{
         component: () => import('../views/rule/basics'),
       },
       ]
-    }
+    },
+    {
+      path: '/deploy',
+      name: 'deploy',
+      component: () => import('../views/deploy.vue'),
+      meta: {
+        title: '统计报表'
+      }
+    },
+    {
+      path: '/deployInfo',
+      name: 'deployInfo',
+      component: () => import('../views/deployInfo.vue'),
+      meta: {
+        title: '统计报表详情'
+      }
+    },
+    {
+      path: '/detailEdit',
+      name: 'detailEdit',
+      component: () => import('../views/detailEdit.vue'),
+      meta: {
+        title: '明细报表'
+      }
+    },
+    {
+      path: '/detailInfo',
+      name: 'detailInfo',
+      component: () => import('../views/detailInfo.vue'),
+      meta: {
+        title: '明细报表详情'
+      }
+    },
   ]
 }]
 

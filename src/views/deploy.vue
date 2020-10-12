@@ -4,7 +4,7 @@
  * @Author: MapleLeaves
  * @Date: 2020-10-12 10:51:39
  * @LastEditors:  
- * @LastEditTime: 2020-10-12 10:55:10
+ * @LastEditTime: 2020-10-12 11:21:45
 -->
 <template>
   <el-container class='home'>
@@ -275,7 +275,7 @@ export default {
   }
 }
 </script>
-<style lang='less'>
+<style lang='less' scoped>
 .el-message {
   z-index: 10000 !important;
 }

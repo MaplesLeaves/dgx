@@ -4,7 +4,7 @@
  * @Author: MapleLeaves
  * @Date: 2020-10-09 14:17:55
  * @LastEditors:  
- * @LastEditTime: 2020-10-10 16:46:30
+ * @LastEditTime: 2020-10-12 18:15:43
 -->
 <template>
   <div class="crte">
@@ -22,40 +22,43 @@
           <el-input></el-input>
         </div>
       </transition>
-      <div class="footerBar">
+      <div class="footerInfo">
         <el-button size="mini"
-                   @click="isSHow = !isSHow"
+        @click="nowNum =2"
                    round>添加报表目录</el-button>
         <el-button size="mini"
-                   @click="isSHow = !isSHow"
+        @click="nowNum = 1"
                    round>添加报表</el-button>
         <el-button size="mini"
-                   @click="isSHow = !isSHow"
                    round>删除</el-button>
       </div>
     </header>
     <el-container>
       <el-aside width="200px">
-        
-
+        <tree />
       </el-aside>
       <el-main>
-        <add-catalogue />
+        <add-catalogue v-if="nowNum === 1"/>
+        <addReport v-if="nowNum === 2" />
       </el-main>
     </el-container>
   </div>
 </template>
-
 <script>
-import addCatalogue from '@/components/addCatalogue'
+import addCatalogue from 'components/addCatalogue'
+import addReport from 'components/addReport'
+import tree from './tree'
 export default {
   name: 'crte',
   components: {
     addCatalogue,
+    addReport,
+    tree,
   },
   data() {
     return {
       isSHow: false,
+      nowNum: 0
     }
   },
   methods: {},
@@ -66,6 +69,7 @@ export default {
 .crte {
   > header {
     line-height: normal;
+    padding: 10px 0;
     > .top {
       display: flex;
       justify-content: space-between;
@@ -83,7 +87,7 @@ export default {
       align-items: center;
       margin: 15px 0;
     }
-    > .footerBar {
+    > .footerInfo {
       margin-bottom: 15px;
       border-bottom: 1px solid #dedede;
       padding-bottom: 15px;

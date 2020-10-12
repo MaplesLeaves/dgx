@@ -235,7 +235,7 @@ export default {
   }
 }
 </script>
-<style lang='less'>
+<style lang='less' scoped>
 .el-message {
   z-index: 10000 !important;
 }
