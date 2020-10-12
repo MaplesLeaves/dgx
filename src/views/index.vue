@@ -4,17 +4,21 @@
  * @Author: MapleLeaves
  * @Date: 2020-09-29 14:46:35
  * @LastEditors:  
- * @LastEditTime: 2020-10-10 11:23:40
+ * @LastEditTime: 2020-10-10 16:38:48
 -->
 <template>
   <el-container class="index">
     <el-header>
-      <el-button @click="isCollapse = !isCollapse">开关</el-button>
+      <div>das</div>
+      <div>
+        icon
+      </div>
     </el-header>
     <el-container class='content'>
       <el-aside :width="!isCollapse? '200px': '65px'">
         <el-menu default-active="1-4-1"
                  class="el-menu-vertical-demo"
+                 text-color="#fff"
                  :collapse="isCollapse">
           <el-submenu index="1">
             <template slot="title">
@@ -50,50 +54,63 @@
         </el-menu>
       </el-aside>
       <el-main>
-          <router-view/>
+        <bookmask />
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
+import bookmask from 'components/bookmark'
 export default {
   name: 'index',
+  components: {
+    bookmask,
+  },
   data() {
     return {
-      isCollapse: true,
+      isCollapse: false,
     }
   },
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .index {
   height: 100%;
-  >.content{
+  > .content {
     height: calc(100% - 60px);
   }
 }
-.el-header,
-.el-footer {
-  background-color: #b3c0d1;
+/deep/ .el-header {
+  background-color: #2d5f88;
   color: #333;
-  text-align: center;
   line-height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
 }
 
-.el-aside {
+/deep/ .el-aside {
   height: 100%;
   overflow-y: auto;
+  .el-menu--collapse {
+    height: 100%;
+  }
+  .el-menu {
+   background: #467eaf;
+   color: white;
+   height: 100%;
+  }
 }
 
 .el-main {
-  background-color: #e9eef3;
   color: #333;
 }
 
 body > .el-container {
   margin-bottom: 40px;
 }
-
 </style>

@@ -4,7 +4,7 @@
  * @Author: MapleLeaves
  * @Date: 2020-09-28 17:19:53
  * @LastEditors:  
- * @LastEditTime: 2020-10-09 15:12:31
+ * @LastEditTime: 2020-10-10 14:37:02
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -14,6 +14,9 @@ const routes = [{
   path: '/',
   name: 'index',
   component: () => import('../views/index.vue'),
+  meta:{
+    title: '主页'
+  },
   children: [{
       path: '/tree',
       name: 'tree',
@@ -23,11 +26,17 @@ const routes = [{
       path: '/carte',
       name: 'carte',
       component: () => import('../views/carte.vue'),
+      meta:{
+        title: '菜单管理'
+      }
     },
     {
       path: '/role',
       name: 'role',
       component: () => import('../views/role.vue'),
+      meta: {
+        title: '角色管理'
+      }
     },
     
   ]
