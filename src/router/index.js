@@ -29,7 +29,18 @@ const routes = [{
       name: 'role',
       component: () => import('../views/role.vue'),
     },
-    
+    {
+      path: '/rule',
+      name: 'Rule',
+      component: () => import('../views/rule/index.vue'),
+      children: [
+      {
+        path: '/',
+        name: 'Basics',
+        component: () => import('../views/rule/basics'),
+      },
+      ]
+    }
   ]
 }]
 
