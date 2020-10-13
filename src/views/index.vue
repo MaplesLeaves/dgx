@@ -4,7 +4,7 @@
  * @Author: MapleLeaves
  * @Date: 2020-09-29 14:46:35
  * @LastEditors:  
- * @LastEditTime: 2020-10-12 17:58:58
+ * @LastEditTime: 2020-10-13 11:13:48
 -->
 <template>
   <el-container class="index">
@@ -14,13 +14,10 @@
              alt=""
              width="146px"
              height="40px">
+        <i class="iconfont iconcaidanbiaoqian" @click="isCollapse = !isCollapse"></i>
       </div>
-      <el-radio-group v-model="isCollapse"
-                      style="margin-bottom: 20px;">
-        <el-radio-button :label="false">展开</el-radio-button>
-        <el-radio-button :label="true">收起</el-radio-button>
-      </el-radio-group>
       <div>
+        <i class="iconfont iconyunduanxiazai" @click="isCollapse = !isCollapse"></i>
         <el-dropdown>
           <span class="el-dropdown-link">
             下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
@@ -29,8 +26,6 @@
             <el-dropdown-item>黄金糕</el-dropdown-item>
             <el-dropdown-item>狮子头</el-dropdown-item>
             <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-            <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -431,6 +426,9 @@ export default {
 
 <style lang='less' scoped>
 .index {
+  .iconyunduanxiazai{
+    font-size: 40px;
+  }
   height: 100%;
   > .content {
     height: calc(100% - 60px);
@@ -438,6 +436,21 @@ export default {
   > .header {
     color: white;
     line-height: normal;
+    >div{
+      &:nth-child(1){
+        width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        >i{
+          margin-left: 10px;
+        }
+      }
+      &:nth-child(2){
+        display: flex;
+        align-items: center;
+      }
+    }
     .el-dropdown {
       color: white;
     }
