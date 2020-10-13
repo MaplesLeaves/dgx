@@ -1,7 +1,44 @@
 <template>
   <div class="pageBasics">
     <tabs v-model="activeName" :tabs-list="tabsList" />
-    {{ activeName }}
+    <div class="btnList">
+      <el-button type="primary" size="mini">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#iconicon_renwuxinzeng"></use>
+        </svg>
+        新增
+      </el-button>
+      <el-button type="primary" size="mini">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#iconxiugai"></use>
+        </svg>
+        修改
+      </el-button>
+      <el-button type="danger" size="mini">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#iconshanchu"></use>
+        </svg>
+        删除
+      </el-button>
+    </div>
+    <div class="content">
+      <div class="box">
+        <div class="svg">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#iconguize"></use>
+          </svg>
+        </div>
+        <div class="name">总公司营销基本法 (09版/A)</div>
+      </div>
+      <div class="box save">
+        <div class="svg">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#iconguize"></use>
+          </svg>
+        </div>
+        <div class="name">总公司营销基本法 (09版/A)</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -39,11 +76,33 @@ export default {
 </script>
 
 <style scoped lang="less">
+.btnList {
+  text-align: right;
+  padding-right: 15px;
+  .el-button {
+    border-radius: 0;
+  }
+}
 .pageBasics {
   height: 100%;
   .content {
     background: white;
     flex: 1;
+    padding: 15px 0 0 15px;
+    .box {
+      box-sizing: border-box;
+      text-align: center;
+      padding: 0 10px;
+      margin-bottom: 15px;
+      display: inline-block;
+      width: 20%;
+      .svg {
+        font-size: 50px;
+      }
+    }
+    // .save {
+    // background-color: rgba(64, 158, 255, 0.3);
+    // }
   }
   .navLeft {
     overflow: hidden;

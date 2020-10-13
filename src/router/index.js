@@ -34,11 +34,30 @@ const routes = [{
       name: 'Rule',
       component: () => import('../views/rule/index.vue'),
       children: [
-      {
-        path: '/',
-        name: 'Basics',
-        component: () => import('../views/rule/basics'),
-      },
+        {
+          path: '/',
+          name: 'Basics',
+          meta: { 
+            title: '基本法编辑'
+          },
+          component: () => import('../views/rule/basics'),
+        },
+        {
+          path: 'versions',
+          name: 'Versions',
+          meta: { 
+            title: '机构版本'
+          },
+          component: () => import('../views/rule/versions.vue'),
+        },
+        {
+          path: 'isPerformance',
+          name: 'IsPerformance',
+          meta: { 
+            title: '时候绩优人力备份'
+          },
+          component: () => import('../views/rule/isPerformance.vue'),
+        },
       ]
     }
   ]

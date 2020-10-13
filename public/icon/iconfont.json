@@ -6,6 +6,69 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "17604017",
+      "name": "修改",
+      "font_class": "xiugai",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "17604018",
+      "name": "删 除",
+      "font_class": "shanchu",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "17602399",
+      "name": "规则",
+      "font_class": "guize",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "17601092",
+      "name": "加",
+      "font_class": "jia",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "17601093",
+      "name": "右",
+      "font_class": "you",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "17601094",
+      "name": "应用",
+      "font_class": "yingyong",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "17601095",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "17601096",
+      "name": "云端下载",
+      "font_class": "yunduanxiazai",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "17601097",
+      "name": "zhu-ye-red",
+      "font_class": "zhu-ye-red",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
       "icon_id": "17381328",
       "name": "成功",
       "font_class": "chenggong",
