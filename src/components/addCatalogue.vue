@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 
+ * @Descripttion: 新增报表
  * @version: 
  * @Author: MapleLeaves
  * @Date: 2020-10-09 13:47:26
  * @LastEditors:  
- * @LastEditTime: 2020-10-09 15:04:23
+ * @LastEditTime: 2020-10-12 13:48:50
 -->
 <template>
   <div class="addCatalogue">
@@ -25,8 +25,8 @@
         <el-input v-model="form.sort"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">立即创建</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary">保存</el-button>
+        <el-button>编辑表头</el-button>
       </el-form-item>
 
     </el-form>

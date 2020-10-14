@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 
+ * @Descripttion: 新增报表目录
  * @version: 
  * @Author: MapleLeaves
  * @Date: 2020-10-09 13:45:40
  * @LastEditors:  
- * @LastEditTime: 2020-10-09 14:55:16
+ * @LastEditTime: 2020-10-12 13:48:12
 -->
 <template>
   <div class="addReport">
@@ -22,8 +22,7 @@
         <el-input v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">立即创建</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary">保存</el-button>
       </el-form-item>
 
     </el-form>

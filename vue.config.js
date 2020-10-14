@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-30 10:14:38
- * @LastEditTime: 2020-10-10 13:36:20
+ * @LastEditTime: 2020-10-10 14:30:31
  * @LastEditors:  
  * @Description: In User Settings Edit
  * @FilePath: \taibao\vue.config.js
@@ -28,7 +28,7 @@ module.exports = {
 		resolve: {
 			alias: {
 				'img': path.resolve(__dirname, 'src/assets'),
-				'cmponents': path.resolve('src/components'),
+				'components': path.resolve(__dirname, 'src/components'),
 			}
 		},
 	}
