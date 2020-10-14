@@ -58,8 +58,8 @@
             <div class="text">
               指标{{ il + 1 }}
               <span
-                class="delete iconfont iconicon_shanchu"
-                @click="deleteTableList(il)"
+                  class="delete iconfont iconicon_shanchu"
+                  @click="deleteTableList(il)"
               />
             </div>
           </div>
@@ -67,6 +67,9 @@
         </div>
         <div class="td" v-for="(span, is) in item" :key="is + 'is'">
           <div v-if="span.type === 'judge'">
+            <i v-if="is !== 0" class="iconfont iconarrows-top" @click="moveCell(0, il, is)" />
+            <i v-if="is+1 !== item.length" class="iconfont iconarrows-bottom" @click="moveCell(1, il, is)" />
+            <i class="iconfont iconarrows-left" @click="moveCell(1, il)" />
             <table-sapn-value :condition-data="span.condition" />
           </div>
           <div v-if="span.type === 'assign'" class="assign">
@@ -190,20 +193,6 @@ export default {
                 },
               ],
             },
-            {
-              value: "daohang",
-              label: "导航",
-              children: [
-                {
-                  value: "cexiangdaohang",
-                  label: "侧向导航",
-                },
-                {
-                  value: "dingbudaohang",
-                  label: "顶部导航",
-                },
-              ],
-            },
           ],
         },
         {
@@ -236,237 +225,50 @@ export default {
                 },
               ],
             },
-            {
-              value: "form",
-              label: "Form",
-              children: [
-                {
-                  value: "radio",
-                  label: "Radio 单选框",
-                },
-                {
-                  value: "checkbox",
-                  label: "Checkbox 多选框",
-                },
-                {
-                  value: "input",
-                  label: "Input 输入框",
-                },
-                {
-                  value: "input-number",
-                  label: "InputNumber 计数器",
-                },
-                {
-                  value: "select",
-                  label: "Select 选择器",
-                },
-                {
-                  value: "cascader",
-                  label: "Cascader 级联选择器",
-                },
-                {
-                  value: "switch",
-                  label: "Switch 开关",
-                },
-                {
-                  value: "slider",
-                  label: "Slider 滑块",
-                },
-                {
-                  value: "time-picker",
-                  label: "TimePicker 时间选择器",
-                },
-                {
-                  value: "date-picker",
-                  label: "DatePicker 日期选择器",
-                },
-                {
-                  value: "datetime-picker",
-                  label: "DateTimePicker 日期时间选择器",
-                },
-                {
-                  value: "upload",
-                  label: "Upload 上传",
-                },
-                {
-                  value: "rate",
-                  label: "Rate 评分",
-                },
-                {
-                  value: "form",
-                  label: "Form 表单",
-                },
-              ],
-            },
-            {
-              value: "data",
-              label: "Data",
-              children: [
-                {
-                  value: "table",
-                  label: "Table 表格",
-                },
-                {
-                  value: "tag",
-                  label: "Tag 标签",
-                },
-                {
-                  value: "progress",
-                  label: "Progress 进度条",
-                },
-                {
-                  value: "tree",
-                  label: "Tree 树形控件",
-                },
-                {
-                  value: "pagination",
-                  label: "Pagination 分页",
-                },
-                {
-                  value: "badge",
-                  label: "Badge 标记",
-                },
-              ],
-            },
-            {
-              value: "notice",
-              label: "Notice",
-              children: [
-                {
-                  value: "alert",
-                  label: "Alert 警告",
-                },
-                {
-                  value: "loading",
-                  label: "Loading 加载",
-                },
-                {
-                  value: "message",
-                  label: "Message 消息提示",
-                },
-                {
-                  value: "message-box",
-                  label: "MessageBox 弹框",
-                },
-                {
-                  value: "notification",
-                  label: "Notification 通知",
-                },
-              ],
-            },
-            {
-              value: "navigation",
-              label: "Navigation",
-              children: [
-                {
-                  value: "menu",
-                  label: "NavMenu 导航菜单",
-                },
-                {
-                  value: "tabs",
-                  label: "Tabs 标签页",
-                },
-                {
-                  value: "breadcrumb",
-                  label: "Breadcrumb 面包屑",
-                },
-                {
-                  value: "dropdown",
-                  label: "Dropdown 下拉菜单",
-                },
-                {
-                  value: "steps",
-                  label: "Steps 步骤条",
-                },
-              ],
-            },
-            {
-              value: "others",
-              label: "Others",
-              children: [
-                {
-                  value: "dialog",
-                  label: "Dialog 对话框",
-                },
-                {
-                  value: "tooltip",
-                  label: "Tooltip 文字提示",
-                },
-                {
-                  value: "popover",
-                  label: "Popover 弹出框",
-                },
-                {
-                  value: "card",
-                  label: "Card 卡片",
-                },
-                {
-                  value: "carousel",
-                  label: "Carousel 走马灯",
-                },
-                {
-                  value: "collapse",
-                  label: "Collapse 折叠面板",
-                },
-              ],
-            },
           ],
-        },
-        {
-          value: "ziyuan",
-          label: "资源",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components",
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates",
-            },
-            {
-              value: "jiaohu",
-              label: "组件交互文档",
-            },
-          ],
-        },
+        }
       ],
       myTableData: [],
       tablesListObjcet: {},
       tableIndex: 1,
       myTableListFrom: {},
+      myTableListCell: {},
+      myTableListTree: {},
       //   myTableListFromList: [],
       //   myTableListFromIndex: 0,
     };
   },
   created() {
     this.tablesListObjcet = this.tableData;
-    this.addParentId(this.tablesListObjcet.startNodes, 0);
-    // 添加第一条数据
-    this.myTableData.push(this.tablesListObjcet.startNodes);
-    this.tableDataRecursion(this.tablesListObjcet.startNodes);
-    console.log(this.myTableData);
+    this.applyData()
+    console.log(this.tablesListObjcet);
   },
   methods: {
+    // 获取数据后渲染页面
+    applyData() {
+      this.addParentId(this.tablesListObjcet.startNodes, 0);
+      // 添加第一条数据
+      this.myTableData = [];
+      this.myTableData.push(this.tablesListObjcet.startNodes);
+      this.tableDataRecursion(this.tablesListObjcet.startNodes);
+    },
     // 保存table
     saveFrom() {
       let arr = this.myTableData.flat();
       const tableFromData = this.listToTree(arr);
       this.tablesListObjcet.startNodes = tableFromData;
-      console.log(this.tablesListObjcet);
     },
     // 整理list
     listToTree(oldArr) {
       oldArr.forEach((element) => {
         let parentId = element.parentId;
-        if (parentId !== 0) {
-          oldArr.forEach((ele) => {
-            if (ele.id == parentId) {
-              //当内层循环的ID== 外层循环的parendId时，（说明有children），需要往该内层id里建个children并push对应的数组；
-              if (!ele.children) {
-                ele.children = [];
+        if (String(parentId) !== '0') {
+          oldArr.forEach((ele, i) => {
+            if (String(ele.id) === String(parentId)) {
+              if (!ele.childNodes) {
+                ele.childNodes = [];
               }
-              ele.children.push(element);
+              ele.childNodes.push(element);
             }
           });
         }
@@ -488,13 +290,100 @@ export default {
       let arr = [];
       list.forEach((item) => {
         arr = arr.concat(item.childNodes);
+        item.childNodes = [];
       });
       if (arr.length) {
-        this.myTableData[this.tableIndex] = arr;
+        this.$set(this.myTableData, this.tableIndex, arr)
       }
       this.tableIndex++;
       if (arr.length) {
         this.tableDataRecursion(arr);
+      }
+    },
+    // 上下移动元素
+    moveCell(type, il, is) {
+      const {parentId} = this.myTableData[il][is];
+      let id = ''
+      // 找到父级
+      this.myTableData.forEach(item => {
+        item.forEach(span => {
+          if (span.id === parentId) {
+            id = span.id
+          }
+        })
+      })
+      // list转tree结构
+      let arr = this.myTableData.flat();
+      this.myTableListTree = this.listToTree(arr)[0];
+      // 找到节点
+      this.queryTableCell(this.myTableListTree, id)
+      if (this.myTableListCell.childNodes.length > 1) {
+        // 转换方向
+        const list = JSON.parse(JSON.stringify(this.myTableListCell.childNodes))
+        const obj = list.splice(is, 1)[0];
+        if (type === 1) {
+          this.myTableListCell.childNodes.splice(is + 1, 0, obj);
+        } else {
+          this.myTableListCell.childNodes.splice(is - 1, 0, obj);
+        }
+      } else {
+        this.$message('无法移动');
+      }
+
+      this.queryTableCellTree(this.myTableListTree, this.myTableListCell.id)
+      console.log(this.myTableListTree)
+      this.addParentId([this.myTableListTree], 0);
+      // // 添加第一条数据
+      this.myTableData = [];
+      this.tableIndex = 1;
+      this.myTableData.push([this.myTableListTree]);
+      this.tableDataRecursion([this.myTableListTree]);
+
+      console.log(this.myTableData)
+
+      // console.log(obj)
+      // const list = JSON.parse(JSON.stringify(this.myTableData[il]))
+      // const obj = list.splice(is, 1)[0];
+      // /**
+      //  * 0: 上移
+      //  * 1: 下移
+      //  */
+      // if (type === 1) {
+      //   list.splice(is + 1, 0, obj);
+      // } else {
+      //   list.splice(is - 1, 0, obj);
+      // }
+      // this.$set(this.myTableData, il, list)
+    },
+    // 递归查找节点替换数据
+    queryTableCellTree(tree, id, arr = [0]) {
+      console.log(String(tree.id) === String(id))
+      if (String(tree.id) === String(id)) {
+        console.log(1231231)
+        // arr.forEach(item => {
+        //   console.log(this.myTableListTree)
+        // })
+        // tree = this.myTableListCell
+        // this.myTableListCell = tree;
+        // return
+      }
+      if (tree.childNodes.length) {
+        tree.childNodes.forEach((item, i)  => {
+          arr.push(i)
+          this.queryTableCell(item, id, arr)
+        })
+      }
+    },
+    // 递归查找节点
+    queryTableCell(tree, id) {
+      if (String(tree.id) === String(id)) {
+        this.myTableListCell = tree;
+        return
+      }
+      if (tree.childNodes.length) {
+        tree.childNodes.forEach(item => {
+          this.queryTableCell(item, id)
+        })
       }
     },
     // 删除一列
@@ -563,7 +452,7 @@ export default {
     min-width: 100px;
 
     > div {
-      padding: 13px;
+      padding: 15px;
       border-right: 1px solid #ffffff;
       min-height: 19px;
       position: relative;
@@ -582,7 +471,7 @@ export default {
       background-color: #f2f8ff;
       text-align: center;
 
-      span {
+      div {
         cursor: default;
       }
 
@@ -626,9 +515,43 @@ export default {
       left: 0;
     }
   }
+  .td {
+    position: relative;
+    .iconfont {
+      position: absolute;
+      margin: auto;
+      left: 0;
+      right: 0;
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+      color: rgb(255, 128, 61);
+      display: none;
 
+      &:hover {
+        color: #4a90f8;
+      }
+    }
+    //
+    .iconarrows-top {
+      top: 0;
+    }
+    .iconarrows-left {
+      left: 0;
+      right: auto;
+    }
+    .iconarrows-bottom {
+      bottom: 0;
+    }
+  }
   .td:nth-child(odd) {
     background-color: #fafafa;
+  }
+  .td:hover {
+    background-color: rgb(252, 248, 227);
+    .iconfont {
+      display: inline-block;
+    }
   }
 }
 
