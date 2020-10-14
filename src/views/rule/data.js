@@ -1,7 +1,18 @@
 // 1、针对当月签约的新人，达标绩优就达标了CE。
 // 2、非当月签约人员，达标绩优且出勤大于等于12天，即为CE人力。在当月1-20日（含）进行按日追踪时，达标绩优，即为CE人力。
+/**
+ * 悲伤向右:
+startNodes 中是表格的内容
 
-{
+每个node是一个单元格
+node的type区分判断节点和赋值节点
+node的condition 里是配置的具体条件
+condition中的code 是配置条件弹窗 下来框里选择的 并且 或者
+condition中data是具体的表达式 每个expression是一行表达式
+expression 是割数组，直接按顺序往下拼接的，除了函数会涉及到嵌套
+
+ */
+export default {
   "quotaId": 1,
   "quotaCode": "isCE_00001",
   "quotaName": "是否CE人力",
@@ -379,7 +390,7 @@
                           "code": "assignNode_00014",
                           "fieldType": 1, //0-基础指标 1-上级指标
                           "field": "emp.isCe",
-                          "conditaion": {
+                          "condition": {
                             "type": "logic",
                             "code": "and",
                             "data": [

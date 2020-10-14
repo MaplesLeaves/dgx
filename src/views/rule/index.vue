@@ -1,51 +1,17 @@
 <template>
   <div class="page" @click="pageClick">
-    <div class="navLeft">
-      <el-menu
-        default-active="2"
-        class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @close="handleClose"
-      >
+    <div class="navLeft" @contextmenu.prevent.stop="(e) => show(e, 0)">
+      <el-menu default-active="2" class="el-menu-vertical-demo">
         <el-submenu index="1">
           <template slot="title">
-            <el-popover
-              placement="bottom"
-              width="100"
-              trigger="manual"
-              v-model="popoverBox"
+            <div
+              class="menaReference"
+              slot="reference"
+              @contextmenu.prevent.stop="(e) => show(e, 1)"
             >
-              <div class="popoverBoxHeader">
-                <div class="popoverBox">
-                  <div class="cell select">
-                    <svg class="icon" aria-hidden="true">
-                      <use xlink:href="#iconicon_tianjia"></use>
-                    </svg>
-                    新建指标
-                  </div>
-                  <div class="cell">
-                    <svg class="icon" aria-hidden="true">
-                      <use xlink:href="#iconicon_tianjia"></use>
-                    </svg>
-                    新建目录
-                  </div>
-                  <div class="cell">
-                    <svg class="icon" aria-hidden="true">
-                      <use xlink:href="#iconicon_tianjia"></use>
-                    </svg>
-                    删除
-                  </div>
-                </div>
-              </div>
-              <div
-                class="menaReference"
-                slot="reference"
-                @contextmenu.prevent="show"
-              >
-                <i class="el-icon-location"></i>
-                <span>导航一</span>
-              </div>
-            </el-popover>
+              <i class="el-icon-location"></i>
+              <span>导航一</span>
+            </div>
           </template>
           <el-menu-item-group>
             <template slot="title">分组一</template>
@@ -67,26 +33,26 @@
         <router-view />
       </div>
     </div>
-    <!-- <div class="popoverBox" id="popoverBox" v-show="popoverBox">
-      <div class="cell select">
+    <div class="popoverBox" id="popoverBoxNav" v-show="popoverBox">
+      <div v-if="popoverBoxType !== 0" class="cell" @click="addCatalog(0)">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#iconicon_tianjia"></use>
         </svg>
         新建指标
       </div>
-      <div class="cell">
+      <div class="cell" @click="addCatalog(1)">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#iconicon_tianjia"></use>
         </svg>
         新建目录
       </div>
-      <div class="cell">
+      <div v-if="popoverBoxType !== 0" class="cell">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#iconicon_tianjia"></use>
         </svg>
         删除
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -95,48 +61,74 @@ export default {
   name: "Rule",
   data() {
     return {
+      popoverBoxType: 0,
       popoverBox: false,
       activeName: "second",
     };
   },
   mounted() {},
   methods: {
+    // 全屏收起弹出框
     pageClick() {
       this.popoverBox = false;
     },
-    show(e) {
+    // 展示弹出框
+    show(e, type) {
+      /**
+       * 0: 在空白处右键
+       * 1: 在目录上右键
+       * 2: 在指标上右键
+       */
+      this.popoverBoxType = type;
+      const { pageX, pageY } = e;
+      const popoverBox = document.getElementById("popoverBoxNav");
+      popoverBox.style.top = pageY + "px";
+      popoverBox.style.left = pageX + "px";
       this.popoverBox = true;
     },
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+    // 新增目录
+    addCatalog(type) {
+      let name = "指标";
+      if (type === 1) {
+        name = "目录";
+      }
+      this.$prompt(`请输入${name}名称`, `创建${name}`, {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      })
+        .then(({ value }) => {
+          console.log(value);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消创建",
+          });
+        });
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
+    // handleOpen(key, keyPath) {
+    //   console.log(key, keyPath);
+    // },
+    // handleClose(key, keyPath) {
+    //   console.log(key, keyPath);
+    // },
   },
 };
 </script>
 
 <style scoped lang="less">
-.menaReference {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  outline: none;
-}
-.popoverBoxHeader {
-  width: 100%;
-  height: 63px;
-}
 .popoverBox {
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
-  width: 100%;
   height: auto;
-  // width: 150px;
-  // box-shadow: 0 0 10px #999999;
-  border-radius: 5px;
+  width: 150px;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 0 10px #999999;
+  border-radius: 5px;
+  background-color: white;
+  z-index: 1000;
   cursor: pointer;
   .cell {
     width: 100%;
@@ -158,6 +150,15 @@ export default {
     color: white;
     background-color: #5eaaff;
   }
+}
+.menaReference {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+}
+.popoverBoxHeader {
+  width: 100%;
+  height: 63px;
 }
 .page {
   display: flex;

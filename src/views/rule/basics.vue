@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import tabs from "./tabs";
+import tabs from "./components/tabs";
 
 export default {
   name: "basics",
