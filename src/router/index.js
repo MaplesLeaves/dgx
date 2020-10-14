@@ -4,7 +4,7 @@
  * @Author: MapleLeaves
  * @Date: 2020-09-28 17:19:53
  * @LastEditors:  
- * @LastEditTime: 2020-10-12 11:14:29
+ * @LastEditTime: 2020-10-13 10:38:17
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -21,6 +21,11 @@ const routes = [{
       path: '/tree',
       name: 'tree',
       component: () => import('../views/tree.vue'),
+    },
+    {
+      path: '/demo',
+      name: 'demo',
+      component: () => import('../views/demo.vue'),
     },
     {
       path: '/carte',
