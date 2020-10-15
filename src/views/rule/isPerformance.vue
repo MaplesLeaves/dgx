@@ -1,38 +1,43 @@
 <!--  -->
 <template>
   <div @click="pageClick">
-    <tabs v-model="activeName" :tabs-list="tabsList" />
-
-    <div class="tables">
-      <tables :table-data="tabData" />
+    <tabs v-model="activeName" :tabs-list.sync="tabsList" />
+    <div v-for="(item, i) in tabsList" :key="item.menuCode">
+      <div class="tables" v-if="activeName === item.menuCode">
+        <tables-view :menu.sync="tabsList[i]" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import tabs from "./components/tabs";
-import tables from "./components/tables";
-import tabData from "./data.js";
+import tablesView from "./components/tablesView";
 // console.log(tabData.startNodes);
 export default {
   //import引入的组件需要注入到对象中才能使用
+  props: {
+    tabsList: {
+      type: Array,
+      default: _ => {return []}
+    }
+  },
   components: {
     tabs: tabs,
-    tables: tables,
+    tablesView: tablesView,
   },
   data() {
     //这里存放数据
     return {
       activeName: "0",
       form: {},
-      tabsList: [
-        { label: "用户管理", name: "0" },
-        { label: "配置管理", name: "1" },
-        { label: "角色管理", name: "2" },
-        { label: "定时任务补偿", name: "3" },
+      myTabsList: [
+        // { label: "用户管理", name: "0" },
+        // { label: "配置管理", name: "1" },
+        // { label: "角色管理", name: "2" },
+        // { label: "定时任务补偿", name: "3" },
       ],
       search: "",
-      tabData: tabData,
     };
   },
   //方法集合
@@ -48,7 +53,9 @@ export default {
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    console.log(this.tabsList);
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
 };

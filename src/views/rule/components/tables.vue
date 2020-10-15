@@ -1,84 +1,148 @@
 <!--  -->
 <template>
-  <div class="">
-    <div class="btnNav">
-      <div class="btnForm"></div>
-      <div class="btnList">
-        <el-button type="success" size="mini" @click="saveFrom">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconicon_renwuxinzeng"></use>
-          </svg>
-          保存
-        </el-button>
+  <div class="" @click="pageClick">
+    <div>
+      <div class="title">
+        指标名称
+
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="新增指标"
+          placement="top"
+        >
+          <div class="iconBtn">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#iconxinzengmingxi"></use>
+            </svg>
+          </div>
+        </el-tooltip>
+
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="复制指标"
+          placement="top"
+        >
+          <div class="iconBtn" @click.stop="myCopyTable">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#iconfuzhi"></use>
+            </svg>
+          </div>
+        </el-tooltip>
+
+        <el-tooltip
+          v-if="offDelete"
+          class="item"
+          effect="dark"
+          content="删除指标"
+          placement="top"
+        >
+          <div class="iconBtn delete" @click.stop="deleteTable">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#iconfuzhibeifen"></use>
+            </svg>
+          </div>
+        </el-tooltip>
+        <el-tooltip
+          v-else
+          class="item"
+          effect="dark"
+          content="无法删除"
+          placement="top"
+        >
+          <div class="iconBtn delete1" @click.stop="deleteTable">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#iconfuzhibeifen"></use>
+            </svg>
+          </div>
+        </el-tooltip>
       </div>
-    </div>
-    <div class="title">
-      指标名称
-
-      <el-tooltip class="item" effect="dark" content="新增指标" placement="top">
-        <div class="iconBtn">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconxinzengmingxi"></use>
-          </svg>
-        </div>
-      </el-tooltip>
-
-      <el-tooltip class="item" effect="dark" content="复制指标" placement="top">
-        <div class="iconBtn">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconfuzhi"></use>
-          </svg>
-        </div>
-      </el-tooltip>
-
-      <el-tooltip class="item" effect="dark" content="删除指标" placement="top">
-        <div class="iconBtn delete">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconfuzhibeifen"></use>
-          </svg>
-        </div>
-      </el-tooltip>
-    </div>
-
-    <div class="tables">
-      <div class="list">
-        <div class="th">
-          <span>基本法</span>
-          <i class="el-icon-caret-bottom"></i>
-        </div>
-        <div class="td">
-          {{ tableData.lawEdition }}
-        </div>
-      </div>
-      <div class="list" v-for="(item, il) in myTableData" :key="il + 'il'">
-        <div class="th">
-          <div v-if="item[0].type === 'judge'">
-            <i class="iconfont iconarrows-right" @click="addTableList(0, il)" />
-            <i class="iconfont iconarrows-left" @click="addTableList(1, il)" />
-            <div class="text">
-              指标{{ il + 1 }}
-              <span
-                  class="delete iconfont iconicon_shanchu"
-                  @click="deleteTableList(il)"
-              />
+      <div class="tables">
+        <div class="list">
+          <div class="tr">
+            <div class="th">
+              <div class="text">
+                基本法
+                <i class="noPosition el-icon-caret-bottom"></i>
+              </div>
+            </div>
+            <div class="content">
+              <div class="td">
+                {{ tableData.lawEdition }}
+              </div>
             </div>
           </div>
-          <div v-else>指标名称</div>
         </div>
-        <div class="td" v-for="(span, is) in item" :key="is + 'is'">
-          <div v-if="span.type === 'judge'">
-            <i v-if="is !== 0" class="iconfont iconarrows-top" @click="moveCell(0, il, is)" />
-            <i v-if="is+1 !== item.length" class="iconfont iconarrows-bottom" @click="moveCell(1, il, is)" />
-            <i class="iconfont iconarrows-left" @click="moveCell(1, il)" />
-            <table-sapn-value :condition-data="span.condition" />
+        <div class="list" v-for="(item, il) in myTableData" :key="il + 'il'">
+          <div class="th">
+            <div
+              v-if="item[0].type === 'judge'"
+              @contextmenu.prevent.stop="(e) => addTarget(e, il)"
+            >
+              <i
+                class="iconfont iconarrows-right"
+                @click.stop="addTableList(0, il)"
+              />
+              <i
+                class="iconfont iconarrows-left"
+                @click.stop="addTableList(1, il)"
+              />
+              <div class="text">
+                指标{{ il + 1 }}
+                <span
+                  class="delete iconfont iconicon_shanchu"
+                  @click.stop="deleteTableList(il)"
+                />
+              </div>
+            </div>
+            <div v-else>
+              <div class="text">指标名称</div>
+            </div>
           </div>
-          <div v-if="span.type === 'assign'" class="assign">
-            常量
-            <table-sapn-value :condition-data="span.condition" />
+          <div class="content">
+            <div
+              class="time"
+              v-if="item[0].type === 'judge' && item[0].newTime"
+            >
+              <div class="text">结算时间 = 下月</div>
+            </div>
+            <div class="tr">
+              <div
+                class="td"
+                v-for="(span, is) in item"
+                :key="is + 'is'"
+                @contextmenu.prevent.stop="(e) => addTargetTd(e, il, is)"
+              >
+                <div v-if="span.type === 'judge'">
+                  <!-- 上下拖动功能暂时不加 -->
+                  <!-- <i
+              v-if="is !== 0"
+              class="iconfont iconarrows-top"
+              @click="moveCell(0, il, is)"
+            />
+            <i
+              v-if="is + 1 !== item.length"
+              class="iconfont iconarrows-bottom"
+              @click="moveCell(1, il, is)"
+            /> -->
+                  <i
+                    v-if="!span.newTime"
+                    class="iconfont iconarrows-left"
+                    @click.stop="addTime(il)"
+                  />
+                  id: {{ span.id }}
+                  <table-sapn-value :condition-data="span.condition" />
+                </div>
+                <div v-if="span.type === 'assign'" class="assign">
+                  常量
+                  <table-sapn-value :condition-data="span.condition" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- <el-table stripe style="width: 100%">
+        <!-- <el-table stripe style="width: 100%">
         <div v-for="(item, i) in myTableData.startNodes" :key="i">
           <el-table-column v-if="item.type === 'judge'" width="200">
             <template slot="header" class="header" slot-scope="scope">
@@ -137,24 +201,78 @@
           </el-table-column>
         </div>
       </el-table> -->
+      </div>
     </div>
 
     <div class="popoverBox" id="popoverBox" v-show="popoverBox">
       <el-cascader-panel
         :options="popoverBoxOptions"
         :props="popoverBoxProps"
+        size="mini"
       ></el-cascader-panel>
+    </div>
+    <div
+      class="popoverBox popoverBoxTd"
+      id="popoverBoxTd"
+      v-show="popoverBoxTd"
+    >
+      <div class="cell">
+        <i class="iconfont iconxinjianzhibiao"></i>
+        配置条件
+      </div>
+      <div class="cell">
+        <i class="iconfont iconxinjianzhibiao"></i>
+        清空
+      </div>
+      <div class="cell">
+        <i class="iconfont iconxinjianzhibiao"></i>
+        复制
+      </div>
+      <div class="cell">
+        <i class="iconfont iconxinjianzhibiao"></i>
+        粘贴
+      </div>
+      <div class="cell">
+        <i class="iconfont iconxinjianzhibiao"></i>
+        上移条件行
+      </div>
+      <div class="cell">
+        <i class="iconfont iconxinjianzhibiao"></i>
+        下移条件行
+      </div>
+      <div class="cell">
+        <i class="iconfont iconxinjianzhibiao"></i>
+        删除条件行
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import tabData from "../data.js";
+
 import tableSapnValue from "./tableSapnValue";
 export default {
   components: {
     tableSapnValue: tableSapnValue,
   },
   props: {
+    deleteTable: {
+      type: Function,
+      requiret: true,
+    },
+    copyTable: {
+      type: Function,
+      requiret: true,
+    },
+    menu: {
+      type: Object,
+      requiret: true,
+    },
+    offDelete: {
+      type: Boolean,
+      requiret: true,
+    },
     tableData: {
       type: Object,
       requiret: true,
@@ -163,33 +281,24 @@ export default {
   data() {
     return {
       popoverBox: false,
+      popoverBoxTd: false,
+      popoverBoxDom: null,
       popoverBoxProps: {
         expandTrigger: "hover",
+        label: "name",
       },
       popoverBoxOptions: [
         {
           value: "zhinan",
-          label: "指南",
+          name: "指南",
           children: [
             {
               value: "shejiyuanze",
-              label: "设计原则",
+              name: "设计原则",
               children: [
                 {
                   value: "yizhi",
-                  label: "一致",
-                },
-                {
-                  value: "fankui",
-                  label: "反馈",
-                },
-                {
-                  value: "xiaolv",
-                  label: "效率",
-                },
-                {
-                  value: "kekong",
-                  label: "可控",
+                  name: "一致",
                 },
               ],
             },
@@ -197,84 +306,77 @@ export default {
         },
         {
           value: "zujian",
-          label: "组件",
+          name: "组件",
           children: [
             {
               value: "basic",
-              label: "Basic",
-              children: [
-                {
-                  value: "layout",
-                  label: "Layout 布局",
-                },
-                {
-                  value: "color",
-                  label: "Color 色彩",
-                },
-                {
-                  value: "typography",
-                  label: "Typography 字体",
-                },
-                {
-                  value: "icon",
-                  label: "Icon 图标",
-                },
-                {
-                  value: "button",
-                  label: "Button 按钮",
-                },
-              ],
+              name: "Basic",
             },
           ],
-        }
+        },
       ],
-      myTableData: [],
       tablesListObjcet: {},
       tableIndex: 1,
+      myTableData: [],
+      myTableListTree: {},
       myTableListFrom: {},
       myTableListCell: {},
-      myTableListTree: {},
       //   myTableListFromList: [],
       //   myTableListFromIndex: 0,
     };
   },
   created() {
-    this.tablesListObjcet = this.tableData;
-    this.applyData()
-    console.log(this.tablesListObjcet);
+    console.log(this.tableData);
+    this.getDataInfo();
   },
   methods: {
+    // 添加结算时间
+    addTime(il) {
+      console.log(this.myTableData[il]);
+      this.myTableData[il].forEach((item, i) => {
+        this.$set(this.myTableData[il][i], "newTime", true);
+      });
+    },
+    // 复制表格
+    myCopyTable() {
+      let arr = this.myTableData.flat();
+      const tableFromData = this.listToTree(arr);
+      this.$emit("update:tableData", {
+        ...this.tableData,
+        startNodes: tableFromData,
+      });
+      this.copyTable();
+    },
+    // 获取所需数据
+    getDataInfo() {
+      this.myTableListTree = this.tableData.startNodes;
+      this.applyData(this.myTableListTree);
+      this.addAlter(true);
+    },
+    // 添加修改状态
+    addAlter(alter) {
+      this.$emit("update:menu", {
+        ...this.menu,
+        alter: alter,
+      });
+    },
+    // 上下移动元素
+    moveCell(type, il, is) {},
     // 获取数据后渲染页面
-    applyData() {
-      this.addParentId(this.tablesListObjcet.startNodes, 0);
-      // 添加第一条数据
+    applyData(tree) {
       this.myTableData = [];
-      this.myTableData.push(this.tablesListObjcet.startNodes);
-      this.tableDataRecursion(this.tablesListObjcet.startNodes);
+      this.tableIndex = 1;
+      this.addParentId(tree, 0);
+      // 添加第一条数据
+      this.myTableData.push(tree);
+      this.tableDataRecursion(tree);
     },
     // 保存table
     saveFrom() {
       let arr = this.myTableData.flat();
       const tableFromData = this.listToTree(arr);
       this.tablesListObjcet.startNodes = tableFromData;
-    },
-    // 整理list
-    listToTree(oldArr) {
-      oldArr.forEach((element) => {
-        let parentId = element.parentId;
-        if (String(parentId) !== '0') {
-          oldArr.forEach((ele, i) => {
-            if (String(ele.id) === String(parentId)) {
-              if (!ele.childNodes) {
-                ele.childNodes = [];
-              }
-              ele.childNodes.push(element);
-            }
-          });
-        }
-      });
-      oldArr = oldArr.filter((ele) => ele.parentId === 0); //这一步是过滤，按树展开，将多余的数组剔除；
-      return oldArr;
+      this.addAlter(false); // 添加修改状态
     },
     // 给树状结构添加praentID
     addParentId(arr, parentId) {
@@ -293,98 +395,31 @@ export default {
         item.childNodes = [];
       });
       if (arr.length) {
-        this.$set(this.myTableData, this.tableIndex, arr)
+        this.$set(this.myTableData, this.tableIndex, arr);
       }
       this.tableIndex++;
       if (arr.length) {
         this.tableDataRecursion(arr);
       }
     },
-    // 上下移动元素
-    moveCell(type, il, is) {
-      const {parentId} = this.myTableData[il][is];
-      let id = ''
-      // 找到父级
-      this.myTableData.forEach(item => {
-        item.forEach(span => {
-          if (span.id === parentId) {
-            id = span.id
-          }
-        })
-      })
-      // list转tree结构
-      let arr = this.myTableData.flat();
-      this.myTableListTree = this.listToTree(arr)[0];
-      // 找到节点
-      this.queryTableCell(this.myTableListTree, id)
-      if (this.myTableListCell.childNodes.length > 1) {
-        // 转换方向
-        const list = JSON.parse(JSON.stringify(this.myTableListCell.childNodes))
-        const obj = list.splice(is, 1)[0];
-        if (type === 1) {
-          this.myTableListCell.childNodes.splice(is + 1, 0, obj);
-        } else {
-          this.myTableListCell.childNodes.splice(is - 1, 0, obj);
+    // 将list转为tree结构
+    listToTree(oldArr) {
+      oldArr.forEach((element) => {
+        let parentId = element.parentId;
+        if (String(parentId) !== "0") {
+          oldArr.forEach((ele, i) => {
+            if (String(ele.id) === String(parentId)) {
+              if (!ele.childNodes) {
+                ele.childNodes = [];
+              }
+              ele.childNodes.push(element);
+            }
+          });
         }
-      } else {
-        this.$message('无法移动');
-      }
-
-      this.queryTableCellTree(this.myTableListTree, this.myTableListCell.id)
-      console.log(this.myTableListTree)
-      this.addParentId([this.myTableListTree], 0);
-      // // 添加第一条数据
-      this.myTableData = [];
-      this.tableIndex = 1;
-      this.myTableData.push([this.myTableListTree]);
-      this.tableDataRecursion([this.myTableListTree]);
-
-      console.log(this.myTableData)
-
-      // console.log(obj)
-      // const list = JSON.parse(JSON.stringify(this.myTableData[il]))
-      // const obj = list.splice(is, 1)[0];
-      // /**
-      //  * 0: 上移
-      //  * 1: 下移
-      //  */
-      // if (type === 1) {
-      //   list.splice(is + 1, 0, obj);
-      // } else {
-      //   list.splice(is - 1, 0, obj);
-      // }
-      // this.$set(this.myTableData, il, list)
-    },
-    // 递归查找节点替换数据
-    queryTableCellTree(tree, id, arr = [0]) {
-      console.log(String(tree.id) === String(id))
-      if (String(tree.id) === String(id)) {
-        console.log(1231231)
-        // arr.forEach(item => {
-        //   console.log(this.myTableListTree)
-        // })
-        // tree = this.myTableListCell
-        // this.myTableListCell = tree;
-        // return
-      }
-      if (tree.childNodes.length) {
-        tree.childNodes.forEach((item, i)  => {
-          arr.push(i)
-          this.queryTableCell(item, id, arr)
-        })
-      }
-    },
-    // 递归查找节点
-    queryTableCell(tree, id) {
-      if (String(tree.id) === String(id)) {
-        this.myTableListCell = tree;
-        return
-      }
-      if (tree.childNodes.length) {
-        tree.childNodes.forEach(item => {
-          this.queryTableCell(item, id)
-        })
-      }
+      });
+      oldArr = oldArr.filter((ele) => ele.parentId === 0); //这一步是过滤，按树展开，将多余的数组剔除；
+      this.addAlter(true); // 添加修改状态
+      return oldArr;
     },
     // 删除一列
     deleteTableList(index) {
@@ -398,7 +433,7 @@ export default {
               span.parentId = item.parentId;
             });
           });
-          console.log(this.myTableData);
+          this.addAlter(true); // 添加修改状态
         })
         .catch((_) => {});
     },
@@ -421,40 +456,121 @@ export default {
       } else {
         this.myTableData.splice(index, 0, arr);
       }
-      console.log(this.myTableData);
+      this.addAlter(true); // 添加修改状态
     },
     // 创建右键弹窗
-    addTarget(type, e, scope) {
-      console.log(e);
+    addTarget(e, il) {
       const { pageX, pageY } = e;
       const popoverBox = document.getElementById("popoverBox");
       popoverBox.style.top = pageY + "px";
       popoverBox.style.left = pageX + "px";
+      this.popoverBoxDom = e.currentTarget; 
+      this.popoverBoxDom.style.backgroundColor = 'rgb(252, 248, 227)';
+      this.popoverBoxDom.querySelectorAll('.iconfont').forEach(item => {
+        item.style.display = 'inline-block'
+      })
+      console.log(this.popoverBoxDom.querySelectorAll('.iconfont'));
       this.popoverBox = true;
-      // popoverBox.style.display = pageX;
-      // TODO 区分弹窗
-      if (type === 0) {
-      }
-      if (type === 1) {
-      }
+    },
+    // 创建右键弹窗<td>标签
+    addTargetTd(e, il, is) {
+      console.log(e.currentTarget);
+      const { pageX, pageY } = e;
+      const popoverBoxTd = document.getElementById("popoverBoxTd");
+      popoverBoxTd.style.top = pageY + "px";
+      popoverBoxTd.style.left = pageX + "px";
+      this.popoverBoxDom = e.currentTarget; 
+      this.popoverBoxDom.style.backgroundColor = 'rgb(252, 248, 227)';
+      this.popoverBoxDom.querySelectorAll('.iconfont').forEach(item => {
+        item.style.display = 'inline-block'
+      })
+      console.log(this.popoverBoxDom.querySelector('.iconfont'));
+      this.popoverBoxTd = true;
+    },
+    // 全局冒泡关闭弹窗
+    pageClick() {
+      this.popoverBoxDom.style.backgroundColor = ''
+      this.popoverBoxDom.querySelectorAll('.iconfont').forEach(item => {
+        item.style.display = 'none'
+      })
+      this.popoverBox = false;
+      this.popoverBoxTd = false;
     },
   },
-  mounted() {},
 };
 </script>
 
 <style lang="less" scoped>
+.popoverBox {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  max-width: 370px;
+  overflow-x: scroll;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #999999;
+  border-radius: 5px;
+  background-color: white;
+  z-index: 1000;
+  cursor: pointer;
+  /deep/.el-cascader-panel.is-bordered {
+    border: 0;
+  }
+  .cell {
+    width: 100%;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    background-color: white;
+
+    svg {
+      filter: drop-shadow(#000000 80px 0);
+      transform: translateX(-80px);
+      overflow: hidden;
+    }
+  }
+
+  .cell:hover {
+    svg {
+      filter: drop-shadow(white 80px 0);
+      transform: translateX(-80px);
+      overflow: hidden;
+    }
+
+    color: white;
+    background-color: #5eaaff;
+  }
+}
+.popoverBoxTd {
+  overflow-x: inherit;
+  width: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+}
 .tables {
   display: flex;
   padding: 0 15px;
-
+  overflow-x: scroll;
+  width: 850px;
   .list {
-    min-width: 100px;
-
-    > div {
+    // min-width: 150px;
+    // width: auto;
+    // overflow: auto;
+    // display: flex;
+    .content {
+      display: flex;
+      .time {
+        flex: 0 0 60px;
+        white-space: nowrap;
+      }
+      .tr {
+        flex: 1;
+      }
+    }
+    > div > div > div {
       padding: 15px;
       border-right: 1px solid #ffffff;
-      min-height: 19px;
+      min-height: 30px;
       position: relative;
       text-align: left;
 
@@ -470,7 +586,13 @@ export default {
       color: #4a90f8;
       background-color: #f2f8ff;
       text-align: center;
-
+      position: relative;
+      .text {
+        text-align: center;
+      }
+      .noPosition {
+        position: relative;
+      }
       div {
         cursor: default;
       }
@@ -497,13 +619,12 @@ export default {
         color: red;
         font-size: 12px;
       }
-    }
+      &:hover {
+        background-color: rgb(252, 248, 227);
 
-    .th:hover {
-      background-color: rgb(252, 248, 227);
-
-      .iconfont {
-        display: inline-block;
+        .iconfont {
+          display: inline-block;
+        }
       }
     }
 
@@ -517,6 +638,10 @@ export default {
   }
   .td {
     position: relative;
+    flex: 1;
+    overflow: hidden;
+    // text-overflow: ellipsis;
+    // white-space: nowrap;
     .iconfont {
       position: absolute;
       margin: auto;
@@ -615,6 +740,9 @@ export default {
     margin-left: 10px;
     cursor: pointer;
     font-size: 17px;
+  }
+  .delete1 {
+    opacity: 0.5;
   }
 }
 

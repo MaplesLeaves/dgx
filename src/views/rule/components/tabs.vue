@@ -1,23 +1,24 @@
 <!-- tabs -->
 <template>
   <div class="tabs">
-    <el-tabs v-model="activeName" @tab-click="handleClick" closable>
+    <el-tabs
+      v-model="activeName"
+      @tab-click="handleClick"
+      @tab-remove="tabRemove"
+      closable
+    >
       <el-tab-pane
-        v-for="(item, i) in tabsList"
-        :key="i"
-        :label="item.label"
-        :name="item.name"
+        v-for="item in myTabsList"
+        :key="item.menuCode"
+        :label="item.menuName"
+        :name="item.menuCode"
       ></el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
-//这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
-//例如：import 《组件名称》 from '《组件路径》';
-
 export default {
-  //import引入的组件需要注入到对象中才能使用
   components: {},
   props: {
     tabsList: {
@@ -25,25 +26,57 @@ export default {
       requiret: true,
     },
   },
-  data() {
-    //这里存放数据
-    return {
-      activeName: "0",
-    };
-  },
-  //监听属性 类似于data概念
-  computed: {},
-  //监控data中的数据变化
   watch: {
+    tabsList(val) {
+      this.activeName = val[val.length - 1].menuCode;
+      this.myTabsList = val;
+    },
     activeName(val) {
       this.$emit("input", val);
     },
   },
-  //方法集合
-  created() {},
-  //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  data() {
+    return {
+      activeName: "0",
+      myTabsList: [],
+    };
+  },
+  created() {
+    this.myTabsList = this.tabsList;
+  },
   methods: {
+    tabRemove(name) {
+      if (this.myTabsList.length > 1) {
+        this.myTabsList.forEach((item, i) => {
+          if (name === item.menuCode) {
+            if (item.alter) {
+              this.$confirm(
+                "检测到未保存的内容，是否在离开页面前保存修改？",
+                "确认信息",
+                {
+                  distinguishCancelAndClose: true,
+                  confirmButtonText: "保存",
+                  cancelButtonText: "不保存",
+                }
+              )
+                .then(() => {
+                  //   message: "保存修改",
+                })
+                .catch((action) => {
+                  if (action === "cancel") {
+                    //   message: "放弃保存",
+                    this.myTabsList.splice(i, 1);
+                  } else {
+                    //   message: "继续修改",
+                  }
+                });
+            } else {
+              this.myTabsList.splice(i, 1);
+            }
+          }
+        });
+      }
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },
@@ -52,7 +85,7 @@ export default {
 </script>
 <style lang='less' scoped>
 .tabs {
-  width: 100%;
+  // width: 100%;
   display: block;
   /deep/ .el-tabs {
     .el-tabs__item::after {
