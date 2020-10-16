@@ -4,7 +4,7 @@
  * @Author: MapleLeaves
  * @Date: 2020-09-29 14:46:35
  * @LastEditors:  
- * @LastEditTime: 2020-10-13 11:13:48
+ * @LastEditTime: 2020-10-13 14:04:13
 -->
 <template>
   <el-container class="index">
@@ -14,10 +14,45 @@
              alt=""
              width="146px"
              height="40px">
-        <i class="iconfont iconcaidanbiaoqian" @click="isCollapse = !isCollapse"></i>
+        <i class="iconfont iconcaidanbiaoqian"
+           @click="isCollapse = !isCollapse"></i>
       </div>
       <div>
-        <i class="iconfont iconyunduanxiazai" @click="isCollapse = !isCollapse"></i>
+        <div>
+          <el-popover placement="bottom"
+                      width="400"
+                      trigger="click">
+            <el-table :data="gridData" stripe>
+              <el-table-column width="105"
+                               property="date"
+                               label="文件名称"></el-table-column>
+              <el-table-column width="190"
+                               property="name"
+                               label="导出状态">
+                <template slot-scope="scope">
+                  <el-progress :percentage="100"
+                  :show-text='false'
+                               format=" "></el-progress>
+                </template>
+              </el-table-column>
+              <el-table-column width="105"
+                               property="address"
+                               label="操作">
+                <template slot-scope="scope">
+                  <i class="iconfont icondownload"></i>
+                  &nbsp;&nbsp;&nbsp;
+                  <i class="iconfont icondustbin_icon"></i>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-badge slot="reference"
+                      :value="12"
+                      class="item">
+
+              <i class="iconfont iconyunduanxiazai"></i>
+            </el-badge>
+          </el-popover>
+        </div>
         <el-dropdown>
           <span class="el-dropdown-link">
             下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
@@ -64,6 +99,28 @@ export default {
   },
   data() {
     return {
+      gridData: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄',
+        },
+        {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄',
+        },
+        {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄',
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄',
+        },
+      ],
       isCollapse: false,
       menu: [
         {
@@ -426,7 +483,7 @@ export default {
 
 <style lang='less' scoped>
 .index {
-  .iconyunduanxiazai{
+  .iconyunduanxiazai {
     font-size: 40px;
   }
   height: 100%;
@@ -436,19 +493,21 @@ export default {
   > .header {
     color: white;
     line-height: normal;
-    >div{
-      &:nth-child(1){
+    > div {
+      &:nth-child(1) {
         width: 200px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        >i{
+        > i {
           margin-left: 10px;
         }
       }
-      &:nth-child(2){
-        display: flex;
-        align-items: center;
+      &:nth-child(2) {
+        & > div {
+          display: inline-block;
+          vertical-align: middle;
+        }
       }
     }
     .el-dropdown {
