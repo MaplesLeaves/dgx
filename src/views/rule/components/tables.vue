@@ -10,8 +10,9 @@
           effect="dark"
           content="新增指标"
           placement="top"
+         
         >
-          <div class="iconBtn">
+          <div class="iconBtn" @click="addTable">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#iconxinzengmingxi"></use>
             </svg>
@@ -24,7 +25,7 @@
           content="复制指标"
           placement="top"
         >
-          <div class="iconBtn" @click.stop="myCopyTable">
+          <div class="iconBtn" @click="myCopyTable">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#iconfuzhi"></use>
             </svg>
@@ -38,7 +39,7 @@
           content="删除指标"
           placement="top"
         >
-          <div class="iconBtn delete" @click.stop="deleteTable">
+          <div class="iconBtn delete" @click="deleteTable">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#iconfuzhibeifen"></use>
             </svg>
@@ -51,7 +52,7 @@
           content="无法删除"
           placement="top"
         >
-          <div class="iconBtn delete1" @click.stop="deleteTable">
+          <div class="iconBtn delete1">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#iconfuzhibeifen"></use>
             </svg>
@@ -82,17 +83,17 @@
             >
               <i
                 class="iconfont iconarrows-right"
-                @click.stop="addTableList(0, il)"
+                @click="addTableList(0, il)"
               />
               <i
                 class="iconfont iconarrows-left"
-                @click.stop="addTableList(1, il)"
+                @click="addTableList(1, il)"
               />
               <div class="text">
                 指标{{ il + 1 }}
                 <span
                   class="delete iconfont iconicon_shanchu"
-                  @click.stop="deleteTableList(il)"
+                  @click="deleteTableList(il)"
                 />
               </div>
             </div>
@@ -105,7 +106,10 @@
               class="time"
               v-if="item[0].type === 'judge' && item[0].newTime"
             >
-              <div class="text">结算时间 = 下月</div>
+              <div class="text">
+                结算时间 =
+                <el-button size="mini"> 下月 </el-button>
+              </div>
             </div>
             <div class="tr">
               <div
@@ -129,7 +133,7 @@
                   <i
                     v-if="!span.newTime"
                     class="iconfont iconarrows-left"
-                    @click.stop="addTime(il)"
+                    @click="addTime(il)"
                   />
                   id: {{ span.id }}
                   <table-sapn-value :condition-data="span.condition" />
@@ -220,29 +224,33 @@
         <i class="iconfont iconxinjianzhibiao"></i>
         配置条件
       </div>
-      <div class="cell">
+      <div class="cell" @click="emptyRule">
         <i class="iconfont iconxinjianzhibiao"></i>
         清空
       </div>
-      <div class="cell">
+      <div class="cell" @click="copyRule">
         <i class="iconfont iconxinjianzhibiao"></i>
         复制
       </div>
-      <div class="cell">
+      <div class="cell" @click="pasteRule" v-if="myTableListCopy">
         <i class="iconfont iconxinjianzhibiao"></i>
         粘贴
       </div>
-      <div class="cell">
+      <!-- <div class="cell">
         <i class="iconfont iconxinjianzhibiao"></i>
         上移条件行
       </div>
       <div class="cell">
         <i class="iconfont iconxinjianzhibiao"></i>
         下移条件行
-      </div>
-      <div class="cell">
+      </div> -->
+      <div class="cell" @click="deleteRule">
         <i class="iconfont iconxinjianzhibiao"></i>
         删除条件行
+      </div>
+      <div class="cell" @click="addRule">
+        <i class="iconfont iconxinjianzhibiao"></i>
+        新增条件行
       </div>
     </div>
   </div>
@@ -250,7 +258,6 @@
 
 <script>
 import tabData from "../data.js";
-
 import tableSapnValue from "./tableSapnValue";
 export default {
   components: {
@@ -258,6 +265,10 @@ export default {
   },
   props: {
     deleteTable: {
+      type: Function,
+      requiret: true,
+    },
+    addTable: {
       type: Function,
       requiret: true,
     },
@@ -321,6 +332,8 @@ export default {
       myTableListTree: {},
       myTableListFrom: {},
       myTableListCell: {},
+      myTableListIl: {},
+      myTableListCopy: null,
       //   myTableListFromList: [],
       //   myTableListFromIndex: 0,
     };
@@ -330,6 +343,103 @@ export default {
     this.getDataInfo();
   },
   methods: {
+    // 新增条件行
+    addRule() {
+      const cell = JSON.parse(JSON.stringify(this.myTableListCell));
+      this.myTableData[this.myTableListIl].push({
+        ...cell,
+        id: `add${++this.tableIndex}`,
+        condition: {
+          code: "and",
+          data: [],
+          type: "logic",
+        },
+      });
+    },
+    // 判断删除条件后删除条件行
+    deleteRuleIf(item, i, listIndex) {
+      if (item.length > 1) {
+        item.splice(i, 1);
+      } else {
+        if (listIndex === 0) {
+          this.$message({
+            message: "无法删除",
+            type: "warning",
+          });
+        } else {
+          this.myTableData.splice(
+            listIndex,
+            this.myTableData.length - listIndex - 1
+          );
+        }
+      }
+    },
+    // 删除条件行
+    deleteRule() {
+      let { id } = this.myTableListCell;
+      let idList = [];
+      this.myTableData.forEach((item, listIndex) => {
+        item.forEach((span, i) => {
+          if (span.id === id) {
+            this.deleteRuleIf(item, i, listIndex);
+          }
+          if (span.parentId === id) {
+            console.log(span.id);
+            idList.push(span.id);
+            this.deleteRuleIf(item, i, listIndex);
+          }
+          idList.forEach((cellId) => {
+            if (cellId === span.parentId) {
+              console.log(span.id);
+              idList.push(span.id);
+              this.deleteRuleIf(item, i, listIndex);
+            }
+          });
+        });
+      });
+      // console.log(id);
+    },
+    // 粘贴规则配置
+    pasteRule() {
+      console.log(navigator);
+      this.myTableListCell.condition = JSON.parse(
+        JSON.stringify(this.myTableListCopy)
+      );
+      this.$message({
+        message: "粘贴成功",
+        type: "success",
+      });
+    },
+    // 复制规则配置
+    copyRule() {
+      this.myTableListCopy = JSON.parse(
+        JSON.stringify(this.myTableListCell.condition)
+      );
+      this.$message({
+        message: "复制成功",
+        type: "success",
+      });
+    },
+    // 清空规则配置
+    emptyRule() {
+      this.$confirm("确认清空单元格配置？", "清空指标", {
+        // confirmButtonText: "删除",
+      })
+        .then((_) => {
+          this.myTableListCell.condition = {
+            code: "and",
+            data: [],
+            type: "logic",
+          };
+          this.$message({
+            message: "清除成功",
+            type: "success",
+          });
+          this.addAlter(true); // 添加修改状态
+        })
+        .catch((_) => {});
+      console.log(this.myTableListCell);
+    },
     // 添加结算时间
     addTime(il) {
       console.log(this.myTableData[il]);
@@ -433,6 +543,11 @@ export default {
               span.parentId = item.parentId;
             });
           });
+
+          this.$message({
+            message: "删除成功",
+            type: "success",
+          });
           this.addAlter(true); // 添加修改状态
         })
         .catch((_) => {});
@@ -456,6 +571,11 @@ export default {
       } else {
         this.myTableData.splice(index, 0, arr);
       }
+
+      this.$message({
+        message: "添加成功",
+        type: "success",
+      });
       this.addAlter(true); // 添加修改状态
     },
     // 创建右键弹窗
@@ -464,35 +584,37 @@ export default {
       const popoverBox = document.getElementById("popoverBox");
       popoverBox.style.top = pageY + "px";
       popoverBox.style.left = pageX + "px";
-      this.popoverBoxDom = e.currentTarget; 
-      this.popoverBoxDom.style.backgroundColor = 'rgb(252, 248, 227)';
-      this.popoverBoxDom.querySelectorAll('.iconfont').forEach(item => {
-        item.style.display = 'inline-block'
-      })
-      console.log(this.popoverBoxDom.querySelectorAll('.iconfont'));
+      this.popoverBoxDom = e.currentTarget;
+      this.popoverBoxDom.style.backgroundColor = "rgb(252, 248, 227)";
+      this.popoverBoxDom.querySelectorAll(".iconfont").forEach((item) => {
+        item.style.display = "inline-block";
+      });
+      console.log(this.popoverBoxDom.querySelectorAll(".iconfont"));
       this.popoverBox = true;
     },
     // 创建右键弹窗<td>标签
     addTargetTd(e, il, is) {
-      console.log(e.currentTarget);
+      this.myTableListIl = il;
+      this.myTableListCell = this.myTableData[il][is];
       const { pageX, pageY } = e;
       const popoverBoxTd = document.getElementById("popoverBoxTd");
       popoverBoxTd.style.top = pageY + "px";
       popoverBoxTd.style.left = pageX + "px";
-      this.popoverBoxDom = e.currentTarget; 
-      this.popoverBoxDom.style.backgroundColor = 'rgb(252, 248, 227)';
-      this.popoverBoxDom.querySelectorAll('.iconfont').forEach(item => {
-        item.style.display = 'inline-block'
-      })
-      console.log(this.popoverBoxDom.querySelector('.iconfont'));
+      this.popoverBoxDom = e.currentTarget;
+      this.popoverBoxDom.style.backgroundColor = "rgb(252, 248, 227)";
+      this.popoverBoxDom.querySelectorAll(".iconfont").forEach((item) => {
+        item.style.display = "inline-block";
+      });
       this.popoverBoxTd = true;
     },
     // 全局冒泡关闭弹窗
     pageClick() {
-      this.popoverBoxDom.style.backgroundColor = ''
-      this.popoverBoxDom.querySelectorAll('.iconfont').forEach(item => {
-        item.style.display = 'none'
-      })
+      if (this.popoverBoxDom) {
+        this.popoverBoxDom.style.backgroundColor = "";
+        this.popoverBoxDom.querySelectorAll(".iconfont").forEach((item) => {
+          item.style.display = "";
+        });
+      }
       this.popoverBox = false;
       this.popoverBoxTd = false;
     },
@@ -607,7 +729,7 @@ export default {
         cursor: pointer;
         color: rgb(255, 128, 61);
         display: none;
-
+        z-index: 1;
         &:hover {
           color: #4a90f8;
         }

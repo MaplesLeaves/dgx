@@ -17,8 +17,17 @@
         :menu.sync="myMenu"
         :table-data.sync="tableDataLisrs[i]"
         :off-delete="tableDataLisrs.length > 1"
-        :delete-table="() => {deleteTable(i)}"
-        :copyTable="() => {copyTable(i)}"
+        :delete-table="
+          () => {
+            deleteTable(i);
+          }
+        "
+        :copyTable="
+          () => {
+            copyTable(i);
+          }
+        "
+        :addTable="() => addTable(i)"
       />
     </div>
   </div>
@@ -58,6 +67,43 @@ export default {
     this.getDataInfo();
   },
   methods: {
+    // 新增表格
+    addTable() {
+      this.tableDataLisrs.push({
+        quotaId: 0,
+        quotaCode: "",
+        quotaName: "",
+        quotaType: 0,
+        lawEdition: "",
+        parentCodes: "",
+        quotaDimension: "",
+        eachDimension: "",
+        hisColumnQuery: "",
+        startNodes: [
+          {
+            id: 1,
+            type: "",
+            code: "",
+            fieldType: 0,
+            field: "",
+            dataTime: null,
+            condition: {
+              type: "",
+              code: "",
+              data: [
+                {
+                  expression: [],
+                },
+              ],
+            },
+            childNodes: [
+              
+            ]
+          },
+        ],
+      });
+      console.log(123);
+    },
     // 复制表格
     copyTable(index) {
       const table = JSON.parse(JSON.stringify(this.tableDataLisrs[index]));
@@ -66,21 +112,23 @@ export default {
     },
     // 删除表格
     deleteTable(index) {
-      this.$confirm('确认删除该配置表格？', '删除表格', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+      this.$confirm("确认删除该配置表格？", "删除表格", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
           this.tableDataLisrs.splice(index, 1);
           this.$message({
-            type: 'success',
-            message: '删除成功!'
+            type: "success",
+            message: "删除成功!",
           });
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
+            type: "info",
+            message: "已取消删除",
+          });
         });
     },
     // 获取所需数据
