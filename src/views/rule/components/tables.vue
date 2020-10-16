@@ -580,6 +580,7 @@ export default {
     },
     // 创建右键弹窗
     addTarget(e, il) {
+      this.pageClick();
       const { pageX, pageY } = e;
       const popoverBox = document.getElementById("popoverBox");
       popoverBox.style.top = pageY + "px";
@@ -594,6 +595,7 @@ export default {
     },
     // 创建右键弹窗<td>标签
     addTargetTd(e, il, is) {
+      this.pageClick();
       this.myTableListIl = il;
       this.myTableListCell = this.myTableData[il][is];
       const { pageX, pageY } = e;
